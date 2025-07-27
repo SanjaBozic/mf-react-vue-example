@@ -420,13 +420,6 @@ const RemoteVueApp = lazy(() => import('./VueRemote'));
 
 ---
 
-## 🙏 Acknowledgments
-
-- [Webpack Module Federation Documentation](https://webpack.js.org/concepts/module-federation/)
-- The micro-frontend community for inspiring modern frontend modularity
-
----
-
 # Info
 
 I did have additional issues with the webpackDevServer in which I had to make a few changes. On host and remote React.js. - just a note for everyone who wants to do their own project with Module Federation.
