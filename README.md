@@ -42,7 +42,7 @@ This setup illustrates the flexibility of cross-framework integration within a m
 Make sure you have the following installed:
 
 - [Node.js (LTS recommended)](https://nodejs.org/)
-- npm (comes with Node.js) or [Yarn](https://yarnpkg.com/)
+- npm (comes with Node.js) 
 
 ---
 
