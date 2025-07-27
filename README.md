@@ -5,7 +5,6 @@ Screenshot of the host with two remotes:
 
 <img width="1490" height="648" alt="image" src="https://github.com/user-attachments/assets/50e606fb-b8ee-4318-97f8-c4520044ac9b" />
 
-Here’s a cleaner, more engaging version of your README that improves structure, readability, and flow—while keeping all the great details intact:
 
 ---
 
