@@ -23,7 +23,7 @@ This setup illustrates the flexibility of cross-framework integration within a m
 - **Vue Remote App**: Federated Vue.js application exposing components to the host.
 - **Webpack 5 Module Federation**: Built-in support for sharing modules at runtime.
 - **Cross-Framework Integration**: React and Vue playing nicely in a single ecosystem.
-- **Clear Configuration**: `webpack.config.js` files in each project.
+- **Clear Configuration**: `webpack.config.js` files in each React project and `vue.config.cjs` file in Vue project.
 
 ---
 
