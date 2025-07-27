@@ -109,7 +109,7 @@ cd host-app
 PORT=3000 npm start
 ```
 
-Open your browser at [http://localhost:8080](http://localhost:8080) — the React host will render components from both remote applications.
+Open your browser at [http://localhost:3000](http://localhost:3000) — the React host will render components from both remote applications.
 
 ---
 
@@ -143,12 +143,80 @@ mf-react-vue-example/
     ├── package.json
     └── vue.config.cjs
 ```
+---
+
+## Integrating Vue Remote in a React Host via Wrapper Component
+
+To enable cross-framework integration between a **Vue.js remote** and a **React.js host**, a wrapper component is implemented to manage rendering and lifecycle behavior. React cannot directly interpret Vue components, so the solution involves dynamically mounting the Vue application inside a DOM node controlled by React.
+
+In this project, I achieved that using the following React component:
+
+```jsx
+// VueRemote.jsx
+import React, { useLayoutEffect, useRef } from 'react';
+
+export default function VueRemote() {
+  const elRef = useRef(null);
+
+  useLayoutEffect(() => {
+    let unmountVue;
+    (async () => {
+      const mod = await import('remoteVue/App');
+      const mount = mod.default || mod.mount;
+      unmountVue = mount(elRef.current);
+    })();
+    return () => unmountVue?.();
+  }, []);
+
+  return <div ref={elRef} />;
+}
+```
+
+### How It Works:
+
+- **Dynamic Import**: Loads the Vue remote application using Module Federation (`remoteVue/App`).
+- **Mount Function**: The Vue app exposes a `mount()` function that attaches the Vue component tree to the provided DOM element.
+- **Ref Handling**: The `ref` (`elRef`) supplies a target DOM node that Vue uses as its mounting point.
+- **Lifecycle Management**: When the React component unmounts, the Vue application is also cleanly unmounted to prevent memory leaks or orphaned DOM nodes.
+
+This wrapper enables smooth interoperability between frameworks while preserving modularity and maintaining full control over lifecycle management.
 
 ---
 
-## 📄 License
+## Lazy Loading with `React.lazy`
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+The following lines dynamically load components at runtime:
+
+```js
+const RemoteReactApp = lazy(() => import('remoteReact/App'));
+const RemoteVueApp = lazy(() => import('./VueRemote'));
+```
+
+- `React.lazy()` defers loading of these modules until they’re actually rendered.
+- `remoteReact/App` refers to a federated module exposed by the React remote application via Webpack Module Federation.
+- `./VueRemote` is a local wrapper component that bootstraps the Vue remote app inside a React-managed DOM node.
+
+### Suspense Boundaries
+
+```jsx
+<Suspense fallback="Loading React remote…">
+  <RemoteReactApp />
+</Suspense>
+
+<Suspense fallback="Loading Vue remote…">
+  <RemoteVueApp />
+</Suspense>
+```
+
+- **`Suspense`** handles the time window during which the lazy-loaded modules are being fetched and rendered.
+- The `fallback` string provides a temporary UI (loading message) until the module is ready.
+- Each remote component has its own boundary, which ensures isolated loading behavior and better user experience.
+
+### Why It’s Useful
+
+- **Performance Optimization**: Large remote apps aren’t bundled upfront—they’re only loaded when needed.
+- **Decoupled Architecture**: Keeps host and remote apps loosely coupled, while maintaining smooth UX.
+- **Framework Agnostic Integration**: Vue and React are loaded independently, with their own wrappers, yet rendered side by side.
 
 ---
 
